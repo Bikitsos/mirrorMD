@@ -29,11 +29,11 @@
 **Goal:** Create the basic layout with the ability to toggle themes.
 
 **Tasks:**
-- [ ] Set up the frontend structure (`index.html`, `styles.css`).
-- [ ] Implement the Solarized Color Palette (Base03 to Base3, Yellow, Orange, Red, etc.).
-- [ ] Create a simple JavaScript toggle that switches a class on the `<body>` (e.g., `.solarized-light` ↔ `.solarized-dark`).
+- [x] Set up the frontend structure (`index.html`, `styles.css`).
+- [x] Implement the Solarized Color Palette (Base03 to Base3, Yellow, Orange, Red, etc.).
+- [x] Create a simple JavaScript toggle that switches a class on the `<body>` (e.g., `.solarized-light` ↔ `.solarized-dark`).
 
-**Milestone:** A web page with a header, footer, and content area that cleanly switches between light (cream background) and dark (deep blue background) modes.
+**Milestone:** ✅ A web page with a header, footer, and content area that cleanly switches between light (cream background) and dark (deep blue background) modes.
 
 ---
 

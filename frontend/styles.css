@@ -1,0 +1,281 @@
+/* Solarized Color Palette */
+:root {
+  /* Base colors */
+  --base03:  #002b36;  /* Dark background */
+  --base02:  #073642;  /* Dark background highlights */
+  --base01:  #586e75;  /* Optional emphasized content (dark) */
+  --base00:  #657b83;  /* Body text (dark) */
+  --base0:   #839496;  /* Body text (light) */
+  --base1:   #93a1a1;  /* Optional emphasized content (light) */
+  --base2:   #eee8d5;  /* Light background highlights */
+  --base3:   #fdf6e3;  /* Light background */
+
+  /* Accent colors */
+  --yellow:  #b58900;
+  --orange:  #cb4b16;
+  --red:     #dc322f;
+  --magenta: #d33682;
+  --violet:  #6c71c4;
+  --blue:    #268bd2;
+  --cyan:    #2aa198;
+  --green:   #859900;
+}
+
+/* Reset */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Theme (Default) */
+body.solarized-dark {
+  background-color: var(--base03);
+  color: var(--base0);
+}
+
+body.solarized-dark .header {
+  background-color: var(--base02);
+  border-bottom: 1px solid var(--base01);
+}
+
+body.solarized-dark .footer {
+  background-color: var(--base02);
+  border-top: 1px solid var(--base01);
+}
+
+body.solarized-dark .content {
+  background-color: var(--base03);
+}
+
+body.solarized-dark .card {
+  background-color: var(--base02);
+  border: 1px solid var(--base01);
+}
+
+body.solarized-dark .btn-primary {
+  background-color: var(--cyan);
+  color: var(--base03);
+}
+
+body.solarized-dark .btn-primary:hover {
+  background-color: var(--blue);
+}
+
+body.solarized-dark .text-muted {
+  color: var(--base01);
+}
+
+body.solarized-dark .text-accent {
+  color: var(--cyan);
+}
+
+/* Light Theme */
+body.solarized-light {
+  background-color: var(--base3);
+  color: var(--base00);
+}
+
+body.solarized-light .header {
+  background-color: var(--base2);
+  border-bottom: 1px solid var(--base1);
+}
+
+body.solarized-light .footer {
+  background-color: var(--base2);
+  border-top: 1px solid var(--base1);
+}
+
+body.solarized-light .content {
+  background-color: var(--base3);
+}
+
+body.solarized-light .card {
+  background-color: var(--base2);
+  border: 1px solid var(--base1);
+}
+
+body.solarized-light .btn-primary {
+  background-color: var(--cyan);
+  color: var(--base3);
+}
+
+body.solarized-light .btn-primary:hover {
+  background-color: var(--blue);
+}
+
+body.solarized-light .text-muted {
+  color: var(--base1);
+}
+
+body.solarized-light .text-accent {
+  color: var(--cyan);
+}
+
+/* Layout Components */
+.header {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.logo-icon {
+  font-size: 1.75rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+/* Button Styles */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+}
+
+/* Card Styles */
+.card {
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.card h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Status Indicator */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Feature Grid */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.feature-item {
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+body.solarized-dark .feature-item {
+  background-color: var(--base02);
+}
+
+body.solarized-light .feature-item {
+  background-color: var(--base2);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.feature-desc {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
