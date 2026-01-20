@@ -44,11 +44,11 @@
 **Goal:** A working text area that understands Markdown.
 
 **Tasks:**
-- [ ] Integrate a lightweight library like **EasyMDE** or **CodeMirror**.
-- [ ] Style the editor using your Solarized CSS variables (ensure syntax highlighting matches the theme).
-- [ ] Set up a real-time preview pane (split-screen view: Code on left, Preview on right).
+- [x] Integrate a lightweight library like **EasyMDE** or **CodeMirror**.
+- [x] Style the editor using your Solarized CSS variables (ensure syntax highlighting matches the theme).
+- [x] Set up a real-time preview pane (split-screen view: Code on left, Preview on right).
 
-**Milestone:** You can type Markdown on the left and see the rendered HTML on the right.
+**Milestone:** ✅ You can type Markdown on the left and see the rendered HTML on the right.
 
 ---
 

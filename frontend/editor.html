@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MirrorMD - Editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="editor.css">
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Highlight.js for code syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/solarized-dark.min.css" id="hljs-theme">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+</head>
+<body class="solarized-dark">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <a href="index.html" class="logo-link">
+        <span class="logo-icon">🪞</span>
+        <span>MirrorMD</span>
+      </a>
+    </div>
+    <nav class="nav">
+      <button class="btn-icon" id="uploadBtn" title="Upload .md file">
+        📂 Upload
+      </button>
+      <button class="btn-icon" id="exportBtn" title="Export to PDF">
+        📄 Export PDF
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">☀️</span>
+        <span class="theme-text">Light</span>
+      </button>
+    </nav>
+    <input type="file" id="fileInput" accept=".md,.markdown,.txt" hidden>
+  </header>
+
+  <!-- Editor Container -->
+  <main class="editor-container">
+    <!-- Editor Pane (Left) -->
+    <div class="editor-pane">
+      <div class="pane-header">
+        <span class="pane-title">📝 Markdown</span>
+        <span class="pane-info" id="charCount">0 chars</span>
+      </div>
+      <textarea 
+        id="markdownInput" 
+        class="markdown-editor" 
+        placeholder="Start typing your Markdown here..."
+        spellcheck="false"
+      ># Welcome to MirrorMD
+
+Write your **Markdown** here and see it rendered in real-time!
+
+## Features
+
+- ✨ Live preview
+- 🎨 Solarized themes
+- 📄 PDF export
+
+## Code Example
+
+```javascript
+function greet(name) {
+  return `Hello, ${name}!`;
+}
+```
+
+## Table Example
+
+| Feature | Status |
+|---------|--------|
+| Editor | ✅ Done |
+| Preview | ✅ Done |
+| Export | 🔜 Soon |
+
+> "The best way to predict the future is to create it." - Peter Drucker
+</textarea>
+    </div>
+
+    <!-- Divider -->
+    <div class="editor-divider" id="divider">
+      <div class="divider-handle"></div>
+    </div>
+
+    <!-- Preview Pane (Right) -->
+    <div class="preview-pane">
+      <div class="pane-header">
+        <span class="pane-title">👁️ Preview</span>
+        <button class="btn-small" id="copyHtml" title="Copy HTML">
+          📋 Copy HTML
+        </button>
+      </div>
+      <div id="preview" class="markdown-preview">
+        <!-- Rendered markdown will appear here -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>
