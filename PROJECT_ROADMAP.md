@@ -15,12 +15,12 @@
 **Goal:** Get a "Hello World" web server running inside a Podman pod.
 
 **Tasks:**
-- [ ] Initialize a git repository.
-- [ ] Create a `backend/` directory and initialize a Node.js project (`npm init -y`).
-- [ ] Create a `Containerfile` (Dockerfile) for the Node.js app.
-- [ ] Create a `podman-compose.yml` or generate a Kubernetes YAML (`podman generate kube`) to define the pod.
+- [x] Initialize a git repository.
+- [x] Create a `backend/` directory and initialize a Node.js project (`npm init -y`).
+- [x] Create a `Containerfile` (Dockerfile) for the Node.js app.
+- [x] Create a `podman-compose.yml` or generate a Kubernetes YAML (`podman generate kube`) to define the pod.
 
-**Milestone:** Run `podman-compose up` and access `localhost:3000` to see a basic server response.
+**Milestone:** ✅ Run `podman-compose up` and access `localhost:3000` to see a basic server response.
 
 ---
 
