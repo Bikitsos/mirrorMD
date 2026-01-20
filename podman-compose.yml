@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  mirrormd:
+    build:
+      context: .
+      dockerfile: Containerfile
+    container_name: mirrormd-app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./temp:/app/temp  # Shared volume for temporary file processing
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+
+volumes:
+  temp:
