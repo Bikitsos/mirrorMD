@@ -37,11 +37,20 @@
   </header>
 
   <!-- Editor Container -->
-  <main class="editor-container">
+  <main class="editor-container" id="editorContainer">
+    <!-- Drop Zone Overlay -->
+    <div class="drop-zone-overlay" id="dropZone">
+      <div class="drop-zone-content">
+        <span class="drop-icon">📂</span>
+        <span class="drop-text">Drop your .md file here</span>
+      </div>
+    </div>
+
     <!-- Editor Pane (Left) -->
     <div class="editor-pane">
       <div class="pane-header">
         <span class="pane-title">📝 Markdown</span>
+        <span class="pane-filename" id="currentFile"></span>
         <span class="pane-info" id="charCount">0 chars</span>
       </div>
       <textarea 

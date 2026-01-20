@@ -57,11 +57,11 @@
 **Goal:** Upload a `.md` file from your local machine to the web app.
 
 **Tasks:**
-- [ ] Create an HTML File Input element (`<input type="file" accept=".md">`).
-- [ ] Write the Frontend JS to read the file contents using the `FileReader` API (client-side reading is faster than uploading to server just to read it back).
-- [ ] Populate the Markdown Editor with the uploaded file's text.
+- [x] Create an HTML File Input element (`<input type="file" accept=".md">`).
+- [x] Write the Frontend JS to read the file contents using the `FileReader` API (client-side reading is faster than uploading to server just to read it back).
+- [x] Populate the Markdown Editor with the uploaded file's text.
 
-**Milestone:** You can click "Upload", select a `readme.md`, and see its text appear in the editor.
+**Milestone:** ✅ You can click "Upload", select a `readme.md`, and see its text appear in the editor.
 
 ---
 

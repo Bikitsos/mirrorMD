@@ -3,6 +3,7 @@
   flex: 1;
   display: flex;
   overflow: hidden;
+  position: relative;
 }
 
 .editor-pane,
@@ -21,6 +22,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
+  gap: 0.5rem;
 }
 
 .pane-title {
@@ -29,9 +31,67 @@
   gap: 0.5rem;
 }
 
+.pane-filename {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.solarized-dark .pane-filename {
+  background-color: var(--base03);
+  color: var(--cyan);
+}
+
+body.solarized-light .pane-filename {
+  background-color: var(--base3);
+  color: var(--cyan);
+}
+
 .pane-info {
   font-size: 0.75rem;
   opacity: 0.7;
+  margin-left: auto;
+}
+
+/* Drop Zone Overlay */
+.drop-zone-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.drop-zone-overlay.active {
+  display: flex;
+}
+
+.drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem;
+  border: 3px dashed var(--cyan);
+  border-radius: 16px;
+  background-color: rgba(42, 161, 152, 0.1);
+}
+
+.drop-icon {
+  font-size: 4rem;
+}
+
+.drop-text {
+  font-size: 1.25rem;
+  color: var(--cyan);
+  font-weight: 500;
 }
 
 /* Editor Textarea */

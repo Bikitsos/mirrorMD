@@ -9,6 +9,12 @@
   const fileInput = document.getElementById('fileInput');
   const exportBtn = document.getElementById('exportBtn');
   const copyHtmlBtn = document.getElementById('copyHtml');
+  const editorContainer = document.getElementById('editorContainer');
+  const dropZone = document.getElementById('dropZone');
+  const currentFileEl = document.getElementById('currentFile');
+
+  // Current file name
+  let currentFileName = '';
 
   // Configure marked.js
   if (typeof marked !== 'undefined') {
@@ -140,26 +146,91 @@
     });
   }
 
-  // File upload
+  // Helper to load file content
+  function loadFile(file) {
+    if (!file) return;
+
+    // Check file type
+    const validTypes = ['.md', '.markdown', '.txt'];
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!validTypes.includes(ext)) {
+      alert('Please upload a .md, .markdown, or .txt file');
+      return;
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File too large. Maximum size is 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      markdownInput.value = event.target.result;
+      currentFileName = file.name;
+      updateFilenameDisplay();
+      renderPreview();
+    };
+    reader.onerror = function() {
+      alert('Error reading file');
+    };
+    reader.readAsText(file);
+  }
+
+  // Update filename display
+  function updateFilenameDisplay() {
+    if (currentFileEl) {
+      currentFileEl.textContent = currentFileName ? `📄 ${currentFileName}` : '';
+    }
+  }
+
+  // File upload via button
   if (uploadBtn && fileInput) {
     uploadBtn.addEventListener('click', () => fileInput.click());
     
     fileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        markdownInput.value = event.target.result;
-        renderPreview();
-      };
-      reader.onerror = function() {
-        alert('Error reading file');
-      };
-      reader.readAsText(file);
-      
+      loadFile(file);
       // Reset input so same file can be uploaded again
       fileInput.value = '';
+    });
+  }
+
+  // Drag and drop support
+  if (editorContainer && dropZone) {
+    let dragCounter = 0;
+
+    editorContainer.addEventListener('dragenter', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter++;
+      dropZone.classList.add('active');
+    });
+
+    editorContainer.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter--;
+      if (dragCounter === 0) {
+        dropZone.classList.remove('active');
+      }
+    });
+
+    editorContainer.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    editorContainer.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragCounter = 0;
+      dropZone.classList.remove('active');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        loadFile(files[0]);
+      }
     });
   }
 
@@ -171,7 +242,7 @@
         const response = await fetch('/api/generate-pdf', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ markdown })
+          body: JSON.stringify({ markdown, filename: currentFileName })
         });
 
         if (response.ok) {
@@ -230,11 +301,15 @@
   window.mirrorMD = {
     renderPreview,
     getMarkdown: () => markdownInput?.value || '',
-    setMarkdown: (md) => {
+    setMarkdown: (md, filename = '') => {
       if (markdownInput) {
         markdownInput.value = md;
+        currentFileName = filename;
+        updateFilenameDisplay();
         renderPreview();
       }
-    }
+    },
+    getFilename: () => currentFileName,
+    loadFile
   };
 })();
