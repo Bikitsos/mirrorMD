@@ -21,6 +21,12 @@ ensureTempDir();
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
+
+// Redirect root to editor
+app.get('/', (req, res) => {
+  res.redirect('/editor.html');
+});
+
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Health check endpoint
@@ -233,7 +239,7 @@ app.post('/api/generate-pdf', async (req, res) => {
 
 // Serve frontend for all other routes
 app.get('/{*path}', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/editor.html'));
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
