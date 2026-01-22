@@ -13,6 +13,13 @@
   const dropZone = document.getElementById('dropZone');
   const currentFileEl = document.getElementById('currentFile');
 
+  // Export Modal Elements
+  const exportModal = document.getElementById('exportModal');
+  const closeModalBtn = document.getElementById('closeModal');
+  const cancelExportBtn = document.getElementById('cancelExport');
+  const confirmExportBtn = document.getElementById('confirmExport');
+  const pdfTitleInput = document.getElementById('pdfTitle');
+
   // Current file name
   let currentFileName = '';
 
@@ -236,31 +243,123 @@
 
   // Export to PDF (placeholder - will be implemented in Day 8)
   if (exportBtn) {
-    exportBtn.addEventListener('click', async function() {
-      try {
-        const markdown = markdownInput.value;
-        const response = await fetch('/api/generate-pdf', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ markdown, filename: currentFileName })
-        });
+    exportBtn.addEventListener('click', function() {
+      openExportModal();
+    });
+  }
 
-        if (response.ok) {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'document.pdf';
-          a.click();
-          URL.revokeObjectURL(url);
-        } else {
-          const error = await response.json();
-          alert(error.message || 'Failed to generate PDF');
-        }
-      } catch (err) {
-        alert('PDF export not yet implemented. Coming in Phase 3!');
+  // Export Modal Functions
+  function openExportModal() {
+    if (!exportModal) return;
+    
+    // Pre-fill title from filename
+    const title = currentFileName 
+      ? currentFileName.replace(/\.(md|markdown|txt)$/i, '')
+      : 'Document';
+    if (pdfTitleInput) pdfTitleInput.value = title;
+    
+    exportModal.classList.add('active');
+    pdfTitleInput?.focus();
+  }
+
+  function closeExportModal() {
+    if (!exportModal) return;
+    exportModal.classList.remove('active');
+  }
+
+  // Modal event listeners
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', closeExportModal);
+  }
+
+  if (cancelExportBtn) {
+    cancelExportBtn.addEventListener('click', closeExportModal);
+  }
+
+  // Close modal on overlay click
+  if (exportModal) {
+    exportModal.addEventListener('click', function(e) {
+      if (e.target === exportModal) {
+        closeExportModal();
       }
     });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && exportModal.classList.contains('active')) {
+        closeExportModal();
+      }
+    });
+  }
+
+  // Confirm export - generate PDF
+  if (confirmExportBtn) {
+    confirmExportBtn.addEventListener('click', async function() {
+      await generatePDF();
+    });
+  }
+
+  async function generatePDF() {
+    const markdown = markdownInput?.value;
+    if (!markdown) {
+      alert('No content to export');
+      return;
+    }
+
+    // Get selected theme
+    const selectedTheme = document.querySelector('input[name="pdfTheme"]:checked')?.value || 'solarized-light';
+    const title = pdfTitleInput?.value || 'Document';
+
+    // Update button state
+    const btnText = confirmExportBtn.querySelector('.btn-text');
+    const btnLoading = confirmExportBtn.querySelector('.btn-loading');
+    
+    confirmExportBtn.disabled = true;
+    if (btnText) btnText.hidden = true;
+    if (btnLoading) btnLoading.hidden = false;
+
+    try {
+      const response = await fetch('/api/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          markdown, 
+          filename: currentFileName || `${title}.md`,
+          theme: selectedTheme,
+          title
+        })
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        
+        // Create download link
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = currentFileName 
+          ? currentFileName.replace(/\.(md|markdown|txt)$/i, '.pdf')
+          : `${title}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Close modal on success
+        closeExportModal();
+      } else {
+        const error = await response.json();
+        alert(error.message || error.error || 'Failed to generate PDF');
+      }
+    } catch (err) {
+      console.error('PDF export error:', err);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      // Reset button state
+      confirmExportBtn.disabled = false;
+      if (btnText) btnText.hidden = false;
+      if (btnLoading) btnLoading.hidden = true;
+    }
   }
 
   // Copy HTML

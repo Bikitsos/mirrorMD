@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const { marked } = require('marked');
 const { v4: uuidv4 } = require('uuid');
+const { markdownToPdf, closeBrowser, THEMES } = require('./pdfConverter');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -168,6 +169,68 @@ app.delete('/api/files/:filename', async (req, res) => {
   }
 });
 
+// Get available PDF themes
+app.get('/api/pdf-themes', (req, res) => {
+  res.json({
+    success: true,
+    themes: Object.keys(THEMES).map(key => ({
+      id: key,
+      name: key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+      description: key === 'printer' 
+        ? 'Black & white, ink-friendly' 
+        : key === 'solarized-light'
+          ? 'Light cream background'
+          : 'Dark blue background'
+    })),
+    default: 'solarized-light'
+  });
+});
+
+// Generate PDF from markdown
+app.post('/api/generate-pdf', async (req, res) => {
+  try {
+    const { markdown, filename, theme = 'solarized-light', title } = req.body;
+    
+    if (!markdown || typeof markdown !== 'string') {
+      return res.status(400).json({ error: 'Invalid markdown content' });
+    }
+
+    // Validate theme
+    const validTheme = THEMES[theme] ? theme : 'solarized-light';
+    
+    console.log(`[API] Generating PDF: ${filename || 'document'} (theme: ${validTheme}, ${markdown.length} chars)`);
+    
+    const startTime = Date.now();
+    
+    // Generate PDF buffer
+    const pdfBuffer = await markdownToPdf(markdown, {
+      theme: validTheme,
+      title: title || filename?.replace(/\.(md|markdown|txt)$/i, '') || 'Document',
+      showFooter: true
+    });
+    
+    const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`[API] PDF generated in ${duration}s (${(pdfBuffer.length / 1024).toFixed(2)} KB)`);
+    
+    // Generate download filename
+    const downloadName = filename 
+      ? filename.replace(/\.(md|markdown|txt)$/i, '.pdf')
+      : 'document.pdf';
+    
+    // Send PDF as download
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${downloadName}"`,
+      'Content-Length': pdfBuffer.length
+    });
+    
+    res.send(pdfBuffer);
+  } catch (err) {
+    console.error('[API] PDF generation error:', err);
+    res.status(500).json({ error: 'Failed to generate PDF', message: err.message });
+  }
+});
+
 // Serve frontend for all other routes
 app.get('/{*path}', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
@@ -175,4 +238,17 @@ app.get('/{*path}', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 MirrorMD server running on http://localhost:${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('📴 Shutting down gracefully...');
+  await closeBrowser();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  console.log('📴 Shutting down gracefully...');
+  await closeBrowser();
+  process.exit(0);
 });

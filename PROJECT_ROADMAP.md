@@ -115,11 +115,18 @@
 **Goal:** The "Export PDF" button works.
 
 **Tasks:**
-- [ ] **Frontend:** When "Export" is clicked, `POST` the markdown to `/api/generate-pdf`.
-- [ ] **Backend:** Generate the PDF into a buffer or temp file.
-- [ ] **Backend:** Return the PDF stream with proper headers (`Content-Type: application/pdf`, `Content-Disposition: attachment`).
+- [x] **Frontend:** When "Export" is clicked, `POST` the markdown to `/api/generate-pdf`.
+- [x] **Backend:** Generate the PDF into a buffer or temp file.
+- [x] **Backend:** Return the PDF stream with proper headers (`Content-Type: application/pdf`, `Content-Disposition: attachment`).
 
-**Milestone:** Clicking the button downloads a file named `document.pdf` to your computer.
+**Milestone:** ✅ Clicking the button downloads a file named `document.pdf` to your computer.
+
+**Bonus Features Implemented:**
+- Export modal with theme selector (Printer, Solarized Light, Solarized Dark)
+- Custom document title input
+- Loading state with spinner during PDF generation
+- `/api/pdf-themes` endpoint for theme discovery
+- Graceful browser cleanup on server shutdown
 
 ---
 

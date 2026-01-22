@@ -110,5 +110,57 @@ function greet(name) {
   <!-- Scripts -->
   <script src="app.js"></script>
   <script src="editor.js"></script>
+
+  <!-- Export Modal -->
+  <div class="modal-overlay" id="exportModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📄 Export to PDF</h3>
+        <button class="modal-close" id="closeModal" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="pdfTitle">Document Title</label>
+          <input type="text" id="pdfTitle" class="form-input" placeholder="Enter document title...">
+        </div>
+        <div class="form-group">
+          <label>PDF Theme</label>
+          <div class="theme-options" id="themeOptions">
+            <label class="theme-option">
+              <input type="radio" name="pdfTheme" value="printer">
+              <span class="theme-card">
+                <span class="theme-preview theme-preview-printer">Aa</span>
+                <span class="theme-name">Printer</span>
+                <span class="theme-desc">Black & white</span>
+              </span>
+            </label>
+            <label class="theme-option">
+              <input type="radio" name="pdfTheme" value="solarized-light" checked>
+              <span class="theme-card">
+                <span class="theme-preview theme-preview-light">Aa</span>
+                <span class="theme-name">Solarized Light</span>
+                <span class="theme-desc">Cream background</span>
+              </span>
+            </label>
+            <label class="theme-option">
+              <input type="radio" name="pdfTheme" value="solarized-dark">
+              <span class="theme-card">
+                <span class="theme-preview theme-preview-dark">Aa</span>
+                <span class="theme-name">Solarized Dark</span>
+                <span class="theme-desc">Dark background</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelExport">Cancel</button>
+        <button class="btn btn-primary" id="confirmExport">
+          <span class="btn-text">📥 Generate PDF</span>
+          <span class="btn-loading" hidden>⏳ Generating...</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
