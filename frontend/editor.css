@@ -13,6 +13,7 @@
   flex-direction: column;
   min-width: 300px;
   overflow: hidden;
+  height: 100%;
 }
 
 .pane-header {
@@ -23,6 +24,9 @@
   font-size: 0.875rem;
   font-weight: 500;
   gap: 0.5rem;
+  height: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
 }
 
 .pane-title {
@@ -106,6 +110,7 @@ body.solarized-light .pane-filename {
   font-size: 0.9rem;
   line-height: 1.6;
   tab-size: 2;
+  box-sizing: border-box;
 }
 
 /* Preview Pane */
@@ -114,6 +119,7 @@ body.solarized-light .pane-filename {
   padding: 1rem;
   overflow-y: auto;
   line-height: 1.7;
+  box-sizing: border-box;
 }
 
 /* Divider */
