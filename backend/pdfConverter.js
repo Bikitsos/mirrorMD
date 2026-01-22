@@ -141,7 +141,7 @@ async function htmlToPdf(html, options = {}) {
 async function markdownToPdf(markdown, options = {}) {
   const { marked } = require('marked');
   
-  // Custom renderer for images
+  // Custom renderer for images and HTML
   const renderer = new marked.Renderer();
   renderer.image = function(href, title, text) {
     // Handle both object format (new marked) and string format (old marked)
@@ -152,6 +152,15 @@ async function markdownToPdf(markdown, options = {}) {
     }
     const titleAttr = title ? ` title="${title}"` : '';
     return `<img src="${href}" alt="${text}"${titleAttr} style="max-width: 100%; height: auto;">`;
+  };
+
+  // Allow raw HTML to pass through (for <img> tags etc)
+  renderer.html = function(html) {
+    // Handle object format in newer marked versions
+    if (typeof html === 'object') {
+      html = html.raw || html.text || '';
+    }
+    return html;
   };
 
   marked.setOptions({

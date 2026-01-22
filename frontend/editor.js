@@ -93,15 +93,6 @@
 
   // Configure marked.js
   if (typeof marked !== 'undefined') {
-    marked.use({
-      breaks: true,
-      gfm: true,
-      headerIds: true,
-      async: false,
-      pedantic: false,
-      mangle: false
-    });
-
     // Custom renderer to handle images properly
     const renderer = new marked.Renderer();
     renderer.image = function(href, title, text) {
@@ -115,7 +106,18 @@
       return `<img src="${href}" alt="${text}"${titleAttr} style="max-width: 100%; height: auto;">`;
     };
 
+    // Allow raw HTML to pass through (for <img> tags etc)
+    renderer.html = function(html) {
+      // Handle object format in newer marked versions
+      if (typeof html === 'object') {
+        html = html.raw || html.text || '';
+      }
+      return html;
+    };
+
     marked.setOptions({
+      breaks: true,
+      gfm: true,
       renderer: renderer,
       highlight: function(code, lang) {
         if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
