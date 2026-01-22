@@ -70,10 +70,10 @@
 **Goal:** Handle data flow between the frontend and the backend.
 
 **Tasks:**
-- [ ] Create a `POST` endpoint `/api/convert` that accepts the Markdown string.
-- [ ] Create a `POST` endpoint `/api/save` (optional) if you want to persist files in a container volume.
+- [x] Create a `POST` endpoint `/api/convert` that accepts the Markdown string.
+- [x] Create a `POST` endpoint `/api/save` (optional) if you want to persist files in a container volume.
 
-**Milestone:** The frontend can successfully send the current editor content to the backend logs.
+**Milestone:** ✅ The frontend can successfully send the current editor content to the backend logs.
 
 ---
 

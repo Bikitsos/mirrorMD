@@ -8,11 +8,17 @@
     "dev": "node --watch index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["markdown", "pdf", "converter"],
+  "keywords": [
+    "markdown",
+    "pdf",
+    "converter"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "marked": "^17.0.1",
+    "uuid": "^13.0.0"
   }
 }
