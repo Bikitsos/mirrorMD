@@ -4,6 +4,7 @@
   display: flex;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 }
 
 .editor-pane,
@@ -13,7 +14,7 @@
   flex-direction: column;
   min-width: 300px;
   overflow: hidden;
-  height: 100%;
+  min-height: 0;
 }
 
 .pane-header {
@@ -111,6 +112,8 @@ body.solarized-light .pane-filename {
   line-height: 1.6;
   tab-size: 2;
   box-sizing: border-box;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 /* Preview Pane */
@@ -120,6 +123,7 @@ body.solarized-light .pane-filename {
   overflow-y: auto;
   line-height: 1.7;
   box-sizing: border-box;
+  min-height: 0;
 }
 
 /* Divider */
