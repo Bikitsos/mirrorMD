@@ -27,11 +27,11 @@
   // Update toggle button appearance
   function updateToggleButton() {
     if (isDarkTheme()) {
-      if (themeIcon) themeIcon.textContent = '☀️';
-      if (themeText) themeText.textContent = 'Light';
+      if (themeIcon) themeIcon.textContent = 'Light';
+      if (themeText) themeText.textContent = '';
     } else {
-      if (themeIcon) themeIcon.textContent = '🌙';
-      if (themeText) themeText.textContent = 'Dark';
+      if (themeIcon) themeIcon.textContent = 'Dark';
+      if (themeText) themeText.textContent = '';
     }
   }
 

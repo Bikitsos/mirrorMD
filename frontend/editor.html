@@ -16,21 +16,21 @@
   <!-- Header -->
   <header class="header">
     <div class="logo">
-      <a href="index.html" class="logo-link">
-        <span class="logo-icon">🪞</span>
+      <a href="/" class="logo-link">
+        <span class="logo-icon">M</span>
         <span>MirrorMD</span>
       </a>
     </div>
     <nav class="nav">
       <button class="btn-icon" id="uploadBtn" title="Upload .md file">
-        📂 Upload
+        Upload
       </button>
       <button class="btn-icon" id="exportBtn" title="Export to PDF">
-        📄 Export PDF
+        Export PDF
       </button>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <span class="theme-icon">☀️</span>
-        <span class="theme-text">Light</span>
+        <span class="theme-icon">Light</span>
+        <span class="theme-text"></span>
       </button>
     </nav>
     <input type="file" id="fileInput" accept=".md,.markdown,.txt" hidden>
@@ -41,7 +41,7 @@
     <!-- Drop Zone Overlay -->
     <div class="drop-zone-overlay" id="dropZone">
       <div class="drop-zone-content">
-        <span class="drop-icon">📂</span>
+        <span class="drop-icon">+</span>
         <span class="drop-text">Drop your .md file here</span>
       </div>
     </div>
@@ -49,7 +49,7 @@
     <!-- Editor Pane (Left) -->
     <div class="editor-pane">
       <div class="pane-header">
-        <span class="pane-title">📝 Markdown</span>
+        <span class="pane-title">Markdown</span>
         <span class="pane-filename" id="currentFile"></span>
         <span class="pane-info" id="charCount">0 chars</span>
       </div>
@@ -64,9 +64,9 @@ Write your **Markdown** here and see it rendered in real-time!
 
 ## Features
 
-- ✨ Live preview
-- 🎨 Solarized themes
-- 📄 PDF export
+- Live preview
+- Solarized themes
+- PDF export
 
 ## Code Example
 
@@ -80,9 +80,9 @@ function greet(name) {
 
 | Feature | Status |
 |---------|--------|
-| Editor | ✅ Done |
-| Preview | ✅ Done |
-| Export | 🔜 Soon |
+| Editor | Done |
+| Preview | Done |
+| Export | Ready |
 
 > "The best way to predict the future is to create it." - Peter Drucker
 </textarea>
@@ -96,9 +96,9 @@ function greet(name) {
     <!-- Preview Pane (Right) -->
     <div class="preview-pane">
       <div class="pane-header">
-        <span class="pane-title">👁️ Preview</span>
+        <span class="pane-title">Preview</span>
         <button class="btn-small" id="copyHtml" title="Copy HTML">
-          📋 Copy HTML
+          Copy HTML
         </button>
       </div>
       <div id="preview" class="markdown-preview">
@@ -111,7 +111,7 @@ function greet(name) {
   <div class="modal-overlay" id="exportModal">
     <div class="modal">
       <div class="modal-header">
-        <h3>📄 Export to PDF</h3>
+        <h3>Export to PDF</h3>
         <button class="modal-close" id="closeModal" aria-label="Close">&times;</button>
       </div>
       <div class="modal-body">
@@ -152,8 +152,8 @@ function greet(name) {
       <div class="modal-footer">
         <button class="btn btn-secondary" id="cancelExport">Cancel</button>
         <button class="btn btn-primary" id="confirmExport">
-          <span class="btn-text">📥 Generate PDF</span>
-          <span class="btn-loading" hidden>⏳ Generating...</span>
+          <span class="btn-text">Generate PDF</span>
+          <span class="btn-loading" hidden>Generating...</span>
         </button>
       </div>
     </div>

@@ -233,22 +233,22 @@ app.post('/api/generate-pdf', async (req, res) => {
 
 // Serve frontend for all other routes
 app.get('/{*path}', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/editor.html'));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 MirrorMD server running on http://localhost:${PORT}`);
+  console.log(`MirrorMD server running on http://localhost:${PORT}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
-  console.log('📴 Shutting down gracefully...');
+  console.log('Shutting down gracefully...');
   await closeBrowser();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
-  console.log('📴 Shutting down gracefully...');
+  console.log('Shutting down gracefully...');
   await closeBrowser();
   process.exit(0);
 });
