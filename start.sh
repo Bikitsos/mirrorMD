@@ -26,15 +26,31 @@ if ! command -v podman &> /dev/null; then
     exit 1
 fi
 
-# Determine compose command (podman compose vs podman-compose)
-if podman compose version &> /dev/null; then
-    COMPOSE_CMD="podman compose"
-elif command -v podman-compose &> /dev/null; then
+# Determine compose command (podman-compose or podman compose with provider)
+COMPOSE_CMD=""
+
+# First check for podman-compose (most reliable)
+if command -v podman-compose &> /dev/null; then
     COMPOSE_CMD="podman-compose"
-else
-    echo -e "${RED}Error: Neither 'podman compose' nor 'podman-compose' is available.${NC}"
-    echo "Install with: pip install podman-compose"
-    echo "Or use Podman 4.1+ which includes 'podman compose'"
+# Then check if podman compose works with a provider
+elif podman compose version &> /dev/null 2>&1; then
+    COMPOSE_CMD="podman compose"
+fi
+
+if [ -z "$COMPOSE_CMD" ]; then
+    echo -e "${RED}Error: No compose provider found.${NC}"
+    echo ""
+    echo "Please install podman-compose:"
+    echo ""
+    echo "  Fedora/RHEL/CentOS:"
+    echo "    sudo dnf install podman-compose"
+    echo ""
+    echo "  Ubuntu/Debian:"
+    echo "    sudo apt install podman-compose"
+    echo ""
+    echo "  pip (any system):"
+    echo "    pip install podman-compose"
+    echo ""
     exit 1
 fi
 
