@@ -4,7 +4,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { markdownToPdf, closeBrowser } = require('./pdfConverter');
+const { markdownToPdf, closeBrowser, THEMES } = require('./pdfConverter');
 
 const TEST_MARKDOWN = `
 # MirrorMD Test Document
@@ -56,25 +56,44 @@ Visit [GitHub](https://github.com) for more information.
 `;
 
 async function runTest() {
-  console.log('🧪 Starting PDF conversion test...\n');
+  console.log('🧪 Starting PDF conversion tests...\n');
+  
+  const themes = Object.keys(THEMES);
+  const results = [];
   
   try {
-    const startTime = Date.now();
+    await fs.mkdir(path.join(__dirname, '../temp'), { recursive: true });
     
-    console.log('📝 Converting markdown to PDF...');
-    const pdfBuffer = await markdownToPdf(TEST_MARKDOWN);
+    for (const theme of themes) {
+      const startTime = Date.now();
+      
+      console.log(`📝 Testing theme: ${theme}...`);
+      
+      const pdfBuffer = await markdownToPdf(TEST_MARKDOWN, {
+        theme,
+        title: 'MirrorMD Test Document',
+        showFooter: true
+      });
+      
+      const outputPath = path.join(__dirname, `../temp/test-${theme}.pdf`);
+      await fs.writeFile(outputPath, pdfBuffer);
+      
+      const endTime = Date.now();
+      const duration = ((endTime - startTime) / 1000).toFixed(2);
+      const size = (pdfBuffer.length / 1024).toFixed(2);
+      
+      results.push({ theme, size, duration, path: outputPath });
+      
+      console.log(`   ✅ ${theme}: ${size} KB in ${duration}s`);
+    }
     
-    const outputPath = path.join(__dirname, '../temp/test.pdf');
-    await fs.mkdir(path.dirname(outputPath), { recursive: true });
-    await fs.writeFile(outputPath, pdfBuffer);
-    
-    const endTime = Date.now();
-    const duration = ((endTime - startTime) / 1000).toFixed(2);
-    
-    console.log(`✅ PDF generated successfully!`);
-    console.log(`📄 Output: ${outputPath}`);
-    console.log(`📊 Size: ${(pdfBuffer.length / 1024).toFixed(2)} KB`);
-    console.log(`⏱️  Time: ${duration}s\n`);
+    console.log('\n📊 Summary:');
+    console.log('─'.repeat(50));
+    results.forEach(r => {
+      console.log(`   ${r.theme.padEnd(20)} ${r.size.padStart(8)} KB   ${r.duration}s`);
+    });
+    console.log('─'.repeat(50));
+    console.log(`\n📁 Output files in: ${path.join(__dirname, '../temp/')}\n`);
     
     return true;
   } catch (error) {
