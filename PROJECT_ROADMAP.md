@@ -84,13 +84,13 @@
 **Goal:** Convert HTML/Markdown to PDF programmatically.
 
 **Tasks:**
-- [ ] Install a conversion library in the backend container.
-  - **Option A (Heavy but precise):** Install `puppeteer` (requires installing Chromium dependencies in the Containerfile).
+- [x] Install a conversion library in the backend container.
+  - **Option A (Heavy but precise):** Install `puppeteer` (requires installing Chromium dependencies in the Containerfile). ✅ CHOSEN
   - **Option B (Lighter):** Use `markdown-pdf` or `html-pdf`.
-- [ ] Update the `Containerfile` to include necessary system libraries (e.g., `libnss3`, `libatk` if using Puppeteer).
-- [ ] Write a script to test conversion internally (e.g., `node convert_test.js`).
+- [x] Update the `Containerfile` to include necessary system libraries (e.g., `libnss3`, `libatk` if using Puppeteer).
+- [x] Write a script to test conversion internally (e.g., `node convert_test.js`).
 
-**Milestone:** A script in the container successfully generates a `test.pdf` from a string.
+**Milestone:** ✅ A script in the container successfully generates a `test.pdf` from a string.
 
 ---
 
