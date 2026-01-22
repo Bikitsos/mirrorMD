@@ -5,7 +5,7 @@ services:
   mirrormd-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Containerfile
     container_name: mirrormd-app
     restart: unless-stopped
     ports:
