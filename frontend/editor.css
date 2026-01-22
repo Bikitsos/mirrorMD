@@ -826,3 +826,162 @@ body.solarized-light .btn-secondary {
     text-align: left;
   }
 }
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  font-size: 0.9rem;
+  font-weight: 500;
+  pointer-events: auto;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-width: 360px;
+}
+
+.toast.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast.hide {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toast-message {
+  flex: 1;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.7;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.toast-close:hover {
+  opacity: 1;
+}
+
+/* Toast Types */
+.toast-success {
+  background-color: var(--green);
+  color: var(--base3);
+}
+
+.toast-error {
+  background-color: var(--red);
+  color: var(--base3);
+}
+
+.toast-warning {
+  background-color: var(--orange);
+  color: var(--base3);
+}
+
+.toast-info {
+  background-color: var(--blue);
+  color: var(--base3);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+}
+
+.loading-overlay.active {
+  display: flex;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+body.solarized-dark .loading-spinner {
+  background: var(--base02);
+  color: var(--base1);
+}
+
+body.solarized-light .loading-spinner {
+  background: var(--base3);
+  color: var(--base01);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Button loading state */
+.btn-icon.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Mobile toasts */
+@media (max-width: 600px) {
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    max-width: none;
+  }
+}

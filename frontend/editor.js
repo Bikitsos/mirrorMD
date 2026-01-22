@@ -1,5 +1,9 @@
 // MirrorMD Editor - Markdown Editor with Live Preview
 (function() {
+  // Constants
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_EXPORT_SIZE = 10 * 1024 * 1024; // 10MB for PDF export
+
   // DOM Elements
   const markdownInput = document.getElementById('markdownInput');
   const preview = document.getElementById('preview');
@@ -12,6 +16,7 @@
   const editorContainer = document.getElementById('editorContainer');
   const dropZone = document.getElementById('dropZone');
   const currentFileEl = document.getElementById('currentFile');
+  const toastContainer = document.getElementById('toastContainer');
 
   // Export Modal Elements
   const exportModal = document.getElementById('exportModal');
@@ -22,6 +27,69 @@
 
   // Current file name
   let currentFileName = '';
+
+  // ========== Toast Notification System ==========
+  function showToast(message, type = 'info', duration = 4000) {
+    if (!toastContainer) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    const icons = {
+      success: '✓',
+      error: '✕',
+      warning: '!',
+      info: 'i'
+    };
+
+    toast.innerHTML = `
+      <span class="toast-icon">${icons[type] || icons.info}</span>
+      <span class="toast-message">${message}</span>
+      <button class="toast-close" aria-label="Close">&times;</button>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+
+    // Close button handler
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => removeToast(toast));
+
+    // Auto remove
+    if (duration > 0) {
+      setTimeout(() => removeToast(toast), duration);
+    }
+
+    return toast;
+  }
+
+  function removeToast(toast) {
+    toast.classList.remove('show');
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 300);
+  }
+
+  // ========== File Size Helpers ==========
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function validateFileSize(size, maxSize, context = 'file') {
+    if (size > maxSize) {
+      showToast(
+        `${context} too large (${formatFileSize(size)}). Maximum size is ${formatFileSize(maxSize)}.`,
+        'error'
+      );
+      return false;
+    }
+    return true;
+  }
 
   // Configure marked.js
   if (typeof marked !== 'undefined') {
@@ -161,15 +229,17 @@
     const validTypes = ['.md', '.markdown', '.txt'];
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     if (!validTypes.includes(ext)) {
-      alert('Please upload a .md, .markdown, or .txt file');
+      showToast('Invalid file type. Please upload a .md, .markdown, or .txt file', 'error');
       return;
     }
 
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('File too large. Maximum size is 5MB.');
+    // Check file size
+    if (!validateFileSize(file.size, MAX_FILE_SIZE, 'File')) {
       return;
     }
+
+    // Show loading state on upload button
+    if (uploadBtn) uploadBtn.classList.add('loading');
 
     const reader = new FileReader();
     reader.onload = function(event) {
@@ -177,9 +247,12 @@
       currentFileName = file.name;
       updateFilenameDisplay();
       renderPreview();
+      showToast(`Loaded "${file.name}" (${formatFileSize(file.size)})`, 'success');
+      if (uploadBtn) uploadBtn.classList.remove('loading');
     };
     reader.onerror = function() {
-      alert('Error reading file');
+      showToast('Error reading file. Please try again.', 'error');
+      if (uploadBtn) uploadBtn.classList.remove('loading');
     };
     reader.readAsText(file);
   }
@@ -187,7 +260,7 @@
   // Update filename display
   function updateFilenameDisplay() {
     if (currentFileEl) {
-      currentFileEl.textContent = currentFileName ? `📄 ${currentFileName}` : '';
+      currentFileEl.textContent = currentFileName ? currentFileName : '';
     }
   }
 
@@ -301,8 +374,14 @@
 
   async function generatePDF() {
     const markdown = markdownInput?.value;
-    if (!markdown) {
-      alert('No content to export');
+    if (!markdown || markdown.trim().length === 0) {
+      showToast('No content to export. Please write some markdown first.', 'warning');
+      return;
+    }
+
+    // Check content size
+    const contentSize = new Blob([markdown]).size;
+    if (!validateFileSize(contentSize, MAX_EXPORT_SIZE, 'Content')) {
       return;
     }
 
@@ -317,6 +396,8 @@
     confirmExportBtn.disabled = true;
     if (btnText) btnText.hidden = true;
     if (btnLoading) btnLoading.hidden = false;
+
+    const startTime = Date.now();
 
     try {
       const response = await fetch('/api/generate-pdf', {
@@ -335,25 +416,40 @@
         const url = URL.createObjectURL(blob);
         
         // Create download link
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = currentFileName 
+        const downloadName = currentFileName 
           ? currentFileName.replace(/\.(md|markdown|txt)$/i, '.pdf')
           : `${title}.pdf`;
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = downloadName;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
+        const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+        showToast(`PDF exported successfully (${formatFileSize(blob.size)}, ${duration}s)`, 'success');
+        
         // Close modal on success
         closeExportModal();
       } else {
-        const error = await response.json();
-        alert(error.message || error.error || 'Failed to generate PDF');
+        let errorMsg = 'Failed to generate PDF';
+        try {
+          const error = await response.json();
+          errorMsg = error.message || error.error || errorMsg;
+        } catch (e) {
+          // Response wasn't JSON
+        }
+        showToast(errorMsg, 'error');
       }
     } catch (err) {
       console.error('PDF export error:', err);
-      alert('Failed to generate PDF. Please try again.');
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        showToast('Network error. Please check your connection.', 'error');
+      } else {
+        showToast('Failed to generate PDF. Please try again.', 'error');
+      }
     } finally {
       // Reset button state
       confirmExportBtn.disabled = false;
@@ -366,15 +462,21 @@
   if (copyHtmlBtn) {
     copyHtmlBtn.addEventListener('click', function() {
       const html = preview.innerHTML;
+      if (!html || html.trim().length === 0) {
+        showToast('No content to copy', 'warning');
+        return;
+      }
+      
       navigator.clipboard.writeText(html).then(() => {
         const originalText = copyHtmlBtn.textContent;
-        copyHtmlBtn.textContent = '✅ Copied!';
+        copyHtmlBtn.textContent = 'Copied!';
+        showToast('HTML copied to clipboard', 'success', 2000);
         setTimeout(() => {
           copyHtmlBtn.textContent = originalText;
         }, 2000);
       }).catch(err => {
         console.error('Failed to copy:', err);
-        alert('Failed to copy HTML');
+        showToast('Failed to copy HTML to clipboard', 'error');
       });
     });
   }

@@ -137,11 +137,21 @@
 **Goal:** Make it robust and user-friendly.
 
 **Tasks:**
-- [ ] Add loading spinners (generating PDFs can take 1-3 seconds).
-- [ ] Handle errors (e.g., "File too large" or "Invalid Markdown").
-- [ ] Refine the Solarized theme toggle to persist preference (save to `localStorage`).
+- [x] Add loading spinners (generating PDFs can take 1-3 seconds).
+- [x] Handle errors (e.g., "File too large" or "Invalid Markdown").
+- [x] Refine the Solarized theme toggle to persist preference (save to `localStorage`).
 
 **Milestone:** The app feels responsive and remembers if you prefer Dark Mode.
+
+**Features Implemented:**
+- Toast notification system (success, error, warning, info)
+- File size validation (5MB upload limit, 10MB export limit)
+- File type validation with user-friendly messages
+- Loading states on upload and export buttons
+- PDF export shows file size and generation time
+- Copy HTML feedback with toast notification
+- Network error handling
+- Animated toast entrance/exit
 
 ---
 
