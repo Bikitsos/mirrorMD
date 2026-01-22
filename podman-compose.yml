@@ -6,14 +6,30 @@ services:
       context: .
       dockerfile: Containerfile
     container_name: mirrormd-app
-    ports:
-      - "3000:3000"
+    networks:
+      - mirrormd-network
     volumes:
-      - ./temp:/app/temp  # Shared volume for temporary file processing
+      - ./temp:/app/temp
     environment:
       - NODE_ENV=production
       - PORT=3000
     restart: unless-stopped
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: mirrormd-tunnel
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    networks:
+      - mirrormd-network
+    depends_on:
+      - mirrormd
+    restart: unless-stopped
+
+networks:
+  mirrormd-network:
+    driver: bridge
 
 volumes:
   temp:
