@@ -26,12 +26,20 @@ if ! command -v podman &> /dev/null; then
     exit 1
 fi
 
-# Check if podman-compose is installed
-if ! command -v podman-compose &> /dev/null; then
-    echo -e "${RED}Error: podman-compose is not installed.${NC}"
+# Determine compose command (podman compose vs podman-compose)
+if podman compose version &> /dev/null; then
+    COMPOSE_CMD="podman compose"
+elif command -v podman-compose &> /dev/null; then
+    COMPOSE_CMD="podman-compose"
+else
+    echo -e "${RED}Error: Neither 'podman compose' nor 'podman-compose' is available.${NC}"
     echo "Install with: pip install podman-compose"
+    echo "Or use Podman 4.1+ which includes 'podman compose'"
     exit 1
 fi
+
+echo "Using: $COMPOSE_CMD"
+echo ""
 
 # Check if podman machine is running (for macOS/Windows)
 if [[ "$OSTYPE" == "darwin"* ]] || [[ "$OSTYPE" == "msys"* ]]; then
@@ -83,14 +91,14 @@ mkdir -p temp
 
 # Stop existing containers if running
 echo "Stopping existing containers..."
-podman-compose down 2>/dev/null || true
+$COMPOSE_CMD down 2>/dev/null || true
 
 # Build and start containers
 echo ""
 echo "Building and starting containers..."
 echo ""
 
-podman-compose up --build -d
+$COMPOSE_CMD up --build -d
 
 echo ""
 echo -e "${GREEN}========================================"
@@ -101,7 +109,7 @@ echo "Access your app through your Cloudflare Tunnel URL"
 echo "configured in the Cloudflare Zero Trust dashboard."
 echo ""
 echo "Useful commands:"
-echo "  View logs:     podman-compose logs -f"
-echo "  Stop app:      podman-compose down"
-echo "  Restart app:   podman-compose restart"
+echo "  View logs:     $COMPOSE_CMD logs -f"
+echo "  Stop app:      $COMPOSE_CMD down"
+echo "  Restart app:   $COMPOSE_CMD restart"
 echo ""
