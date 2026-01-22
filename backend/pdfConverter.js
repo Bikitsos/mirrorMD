@@ -100,7 +100,21 @@ async function htmlToPdf(html, options = {}) {
       </html>
     `;
 
-    await page.setContent(fullHtml, { waitUntil: 'networkidle0' });
+    // Set content and wait for images to load
+    await page.setContent(fullHtml, { waitUntil: 'networkidle0', timeout: 30000 });
+    
+    // Additional wait for any lazy-loaded images
+    await page.evaluate(() => {
+      return Promise.all(
+        Array.from(document.images)
+          .filter(img => !img.complete)
+          .map(img => new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = resolve; // Don't fail on broken images
+            setTimeout(resolve, 5000); // Timeout after 5s per image
+          }))
+      );
+    });
 
     const pdfOptions = {
       ...DEFAULT_OPTIONS,
@@ -127,9 +141,23 @@ async function htmlToPdf(html, options = {}) {
 async function markdownToPdf(markdown, options = {}) {
   const { marked } = require('marked');
   
+  // Custom renderer for images
+  const renderer = new marked.Renderer();
+  renderer.image = function(href, title, text) {
+    // Handle both object format (new marked) and string format (old marked)
+    if (typeof href === 'object') {
+      text = href.text || '';
+      title = href.title || '';
+      href = href.href || '';
+    }
+    const titleAttr = title ? ` title="${title}"` : '';
+    return `<img src="${href}" alt="${text}"${titleAttr} style="max-width: 100%; height: auto;">`;
+  };
+
   marked.setOptions({
     breaks: true,
-    gfm: true
+    gfm: true,
+    renderer: renderer
   });
 
   const html = marked(markdown);

@@ -93,10 +93,30 @@
 
   // Configure marked.js
   if (typeof marked !== 'undefined') {
-    marked.setOptions({
+    marked.use({
       breaks: true,
       gfm: true,
       headerIds: true,
+      async: false,
+      pedantic: false,
+      mangle: false
+    });
+
+    // Custom renderer to handle images properly
+    const renderer = new marked.Renderer();
+    renderer.image = function(href, title, text) {
+      // Handle both object format (new marked) and string format (old marked)
+      if (typeof href === 'object') {
+        text = href.text || '';
+        title = href.title || '';
+        href = href.href || '';
+      }
+      const titleAttr = title ? ` title="${title}"` : '';
+      return `<img src="${href}" alt="${text}"${titleAttr} style="max-width: 100%; height: auto;">`;
+    };
+
+    marked.setOptions({
+      renderer: renderer,
       highlight: function(code, lang) {
         if (typeof hljs !== 'undefined' && lang && hljs.getLanguage(lang)) {
           try {
